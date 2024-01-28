@@ -11,3 +11,7 @@ exp/*
 
 **/*.pyc
 **/*.so
+*.svg
+*.pth
+*.jpg
+./hisup/dataset/crowdai/*

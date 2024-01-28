@@ -62,7 +62,7 @@ def viz_inria(image, polygons, output_dir, file_name, alpha=0.5, linewidth=12, m
     plt.imshow(image)
     for n, poly in enumerate(polygons):
         poly_color = colormap[n%num_color]
-        if poly.type == 'MultiPolygon':
+        if poly.geom_type == 'MultiPolygon':
             for p in poly:
                 patch = PolygonPatch(p.buffer(0), ec=poly_color, fc=poly_color, alpha=alpha, linewidth=linewidth)
                 plt.gca().add_patch(patch)
@@ -89,10 +89,39 @@ def viz_inria(image, polygons, output_dir, file_name, alpha=0.5, linewidth=12, m
                     juncs = np.array(inter.coords[:-1])
                     plt.plot(juncs[:,0], juncs[:,1], color=poly_color, marker='.', markersize=markersize, linestyle='none')
     
-    # save_filename = os.path.join(output_dir, 'inria_viz', file_name[:-4] + '.svg')
-    # plt.savefig(save_filename, bbox_inches='tight', pad_inches=0.0)
-    # plt.clf()
+    save_filename = os.path.join(output_dir, 'inria_viz', file_name[:-4] + '.svg')
+    plt.savefig(save_filename, bbox_inches='tight', pad_inches=0.0)
+    save_filename = os.path.join(output_dir, 'inria_viz', file_name[:-4] + '.png')
+    plt.savefig(save_filename, bbox_inches='tight', pad_inches=0.0)
+
+    #plt.clf()
+    '''
+    poly_color = 'black'  # Set the polygon color to black
+    for n, poly in enumerate(polygons):
+
+        try:
+            patch = PolygonPatch(poly.buffer(0), ec=poly_color, fc=poly_color, alpha=alpha, linewidth=linewidth)
+            plt.gca().add_patch(patch)
+        except TypeError:
+            plt.gca().add_patch(Patches.Polygon(poly.exterior.coords[:-1], fill=True, ec=poly_color, fc=poly_color, linewidth=linewidth, alpha=alpha))
+        plt.gca().add_patch(Patches.Polygon(poly.exterior.coords[:-1], fill=False, ec=poly_color, linewidth=linewidth))
+        juncs = np.array(poly.exterior.coords[:-1])
+        plt.plot(juncs[:,0], juncs[:,1], color=poly_color, marker='.', markersize=markersize, linestyle='none')
+        if len(poly.interiors) != 0:
+            for inter in poly.interiors:
+                plt.gca().add_patch(Patches.Polygon(inter.coords[:-1], fill=False, ec=poly_color, linewidth=linewidth))
+                juncs = np.array(inter.coords[:-1])
+                plt.plot(juncs[:,0], juncs[:,1], color=poly_color, marker='.', markersize=markersize, linestyle='none')
+
+        plt.gca().set_facecolor('white')  # Set the figure background color to white
+    save_filename = os.path.join(output_dir, 'mapping', file_name[:-4] + '.png')
+    plt.savefig(save_filename, bbox_inches='tight', pad_inches=0.0)
+    '''
+
+
+    
     plt.show()
+
 
 
 def draw_predictions_with_mask_inria(img, junctions, polys_ids, save_dir, filename):
